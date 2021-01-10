@@ -15,16 +15,14 @@ namespace yul
         public MoveUnitCommand(Unit unit, int x, int y)
         {
             this.unit = unit;
-            _xBefore = 0;
-            _yBefore = 0;
+            _xBefore = -x;
+            _yBefore = -y;
             _x = x;
             _y = y;        
         }
 
         public override void Execute()
         {
-            _xBefore = unit.X;
-            _yBefore = unit.Y;
             unit.MoveTo(_x, _y);
         }
 
@@ -35,8 +33,8 @@ namespace yul
 
         public override void Undo()
         {
-            Debug.Log("Undo : " + _xBefore + " " + _yBefore);
             unit.MoveTo(_xBefore, _yBefore);
         }
+        
     }
 }

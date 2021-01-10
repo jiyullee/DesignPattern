@@ -11,11 +11,7 @@ namespace yul
 
         private void Awake()
         {
-            X = 0;
-            Y = 0;
-
-            transform.position = new Vector3(X, Y, 0);
-
+  
         }
         public void MoveTo(int x, int y)
         {

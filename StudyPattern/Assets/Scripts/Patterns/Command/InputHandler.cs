@@ -16,7 +16,7 @@ namespace yul
 
         Command moveCommand;
         Stack<Command> CommandStack = new Stack<Command>();
-        int curPtr = -1;
+        int curPtr = 0;
 
         public GameActor actor_a;
         public GameActor actor_b;
@@ -51,58 +51,60 @@ namespace yul
             if (Input.GetKeyDown(KeyCode.Alpha1)) currentUnit = units[0];
             else if (Input.GetKeyDown(KeyCode.Alpha2)) currentUnit = units[1];
             else if (Input.GetKeyDown(KeyCode.Alpha3)) currentUnit = units[2];
-
-            moveCommand = HandleInput();
+          
+            moveCommand = HandleInput(currentUnit);
             if (moveCommand != null)
             {
-                PushCommand(moveCommand);
-                CommandStack.ToArray()[curPtr]     
+                CommandStack.Push(moveCommand);
+                curPtr = 0;
+                CommandStack.Peek().Execute();
             }
-            Debug.Log(CommandStack.Count);
+            
         }
 
         #endregion
 
         #region <Methods>
 
-        public Command HandleInput()
+        public Command HandleInput(Unit currentUnit)
         {
             //if (Input.GetKeyDown(buttonX.GetKey)) return buttonX;
             //else if (Input.GetKeyDown(buttonY.GetKey)) return buttonY;
 
             //return null;
-
-            Unit unit = currentUnit;
-            if (unit == null) return null;
-
+            
+            if (currentUnit == null) return null;
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                int destY = currentUnit.Y + 1;
-                return new MoveUnitCommand(unit, unit.X, destY);
+                return new MoveUnitCommand(currentUnit, 0, 1);
             }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                int destY = currentUnit.Y - 1;
-                return new MoveUnitCommand(unit, unit.X, destY);
+                return new MoveUnitCommand(currentUnit, 0, -1);
             }
 
             return null;
         }
 
-        public void Undo()
-        {        
-            if (--curPtr < 0)
-                curPtr = 0;
-            Debug.Log(CommandStack.ToArray()[curPtr]);
-            CommandStack.ToArray()[curPtr].Undo();
-        }
-
-        public void PushNewCommand(Command command)
+        public void OnClick_Undo()
         {
-            CommandStack.Push(command);
-            curPtr = CommandStack.
+            Debug.Log(curPtr);
+            if (curPtr  == CommandStack.Count)
+            {
+                return;
+            }
+            CommandStack.ToArray()[curPtr++].Undo();
         }
 
+        public void OnClick_Redo()
+        {
+            if (curPtr <= 0)
+            {
+                curPtr = 0;
+                return;
+            }
+            CommandStack.ToArray()[--curPtr].Execute();
+        }
         #endregion
 
     }
