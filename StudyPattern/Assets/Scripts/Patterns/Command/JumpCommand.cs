@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace yul
+namespace Command
 {
     public class JumpCommand : Command
     {

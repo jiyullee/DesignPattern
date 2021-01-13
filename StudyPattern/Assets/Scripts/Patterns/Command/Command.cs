@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace yul
+namespace Command
 {
     public abstract class Command
     {
